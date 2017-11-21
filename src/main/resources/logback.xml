@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="5 seconds">
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{ISO8601}][%-5level][%-20.20thread][%logger{36}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <logger level="error" name="org.apache.coyote.AbstractProtocol"/><!--todo disable tomcat log-->
+    <root level="debug">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
