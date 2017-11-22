@@ -1,0 +1,6 @@
+spring:
+    thymeleaf:
+#        mode: LEGACYHTML5
+        mode: XHTML
+#        mode: HTML5
+        cache: false

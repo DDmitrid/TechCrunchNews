@@ -1,0 +1,149 @@
+.article_image {
+    margin-left: 20%;
+    padding: 3px;
+    width: 60%;
+    vertical-align: top;
+    /*display: inline-block;*/
+}
+
+/*.section {
+    height: 100%;
+    padding-left: 2px;
+    padding-right: 2px;
+    margin-bottom: 20px;
+}*/
+
+a {
+    color: black;
+}
+
+.border {
+    border: 1px solid blue;
+    border-radius: 5px;
+}
+
+.m-b-20 {
+    margin-bottom: 20px;
+}
+
+/*.section {
+    height: 100%;
+    padding-left: 2px;
+    padding-right: 2px;
+}*/
+
+/*.padding-15 {
+    !*padding: 15px;*!
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.column {
+    background: #e7e7e7;
+    !*padding-top: 10px;*!
+    !*padding-left: 10px;*!
+    !*padding-right: 10px;*!
+    !*border-radius: 20px;*!
+}
+
+.width-10 {
+    width: 10px;
+}
+
+.width-20 {
+    width: 20px;
+}
+
+.margin-10 {
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.margin-plus-10 {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.h-max {
+    height: 100%;
+}
+
+.column-title {
+    !*width: 100%;*!
+    padding: 8px 6px;
+
+}
+
+.column-footer {
+    padding: 8px 6px;
+    text-decoration: none;
+}
+
+.w-max {
+    width: 100%;
+}
+
+.padding-1 {
+    padding: 1px;
+}
+
+.padding-5 {
+    padding: 5px;
+}
+
+.card-text {
+    resize: none;
+    height: 60px;
+    outline: none;
+    font: 14px "Helvetica Neue", Arial, Helvetica, sans-serif
+}
+
+.column-footer:hover {
+    background: #c8c8c8;
+}
+
+.card:hover {
+    background: #f0f0f0;
+}
+
+.card {
+    overflow-wrap: break-word;
+    !*overflow-x: auto;*!
+    margin: 0px 6px 4px 6px;
+    background: none;
+    padding: 4px 6px;
+    fontecoration: none
+
+}
+
+a.card-href {
+    overflow-wrap: break-word;
+    margin: 0px 6px 4px 6px;
+    background: #fcfcfc;
+    padding: 4px 6px;
+    display: block;
+    height: 100%;
+    text-decoration: none;
+}
+
+.card-href:hover {
+    background: #f0f0f0;
+}
+
+.m-l-10 {
+    margin-left: 10px;
+}
+
+.margin-5 {
+    margin-left: -5px;
+    margin-right: -5px;
+}*/
+
+/*
+.myClass {
+    max-width: 250px;
+    max-height: 230px;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}*/
