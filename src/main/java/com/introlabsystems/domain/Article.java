@@ -1,5 +1,9 @@
 package com.introlabsystems.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
+
 public class Article {
 
     private ArticleSource source;
@@ -8,7 +12,9 @@ public class Article {
     private String description;
     private String url;
     private String urlToImage;
-    private String publishedAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private Date publishedAt;
 
     public Article() {
     }
@@ -61,12 +67,31 @@ public class Article {
         this.urlToImage = urlToImage;
     }
 
-    public String getPublishedAt() {
+    public Date getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(String publishedAt) {
+    public void setPublishedAt(Date publishedAt) {
         this.publishedAt = publishedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Article article = (Article) o;
+
+        if (!author.equals(article.author)) return false;
+        return title.equals(article.title);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = author.hashCode();
+        result = 31 * result + title.hashCode();
+        return result;
     }
 
     private class ArticleSource {
