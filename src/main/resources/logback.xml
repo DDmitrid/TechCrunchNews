@@ -8,7 +8,7 @@
     </appender>
 
 
-    <logger level="error" name="org.apache.coyote.AbstractProtocol"/><!--todo disable tomcat log-->
+    <logger level="error" name="org.apache.coyote.AbstractProtocol"/>
     <root level="debug">
         <appender-ref ref="CONSOLE"/>
     </root>

@@ -1,6 +1,7 @@
 spring:
     thymeleaf:
-#        mode: LEGACYHTML5
         mode: XHTML
-#        mode: HTML5
         cache: false
+
+techCrunchNews:
+    apiKey: 454c003f64c24921b278c1ba78d67dde

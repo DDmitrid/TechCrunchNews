@@ -14,7 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,8 +25,8 @@ import java.util.concurrent.ScheduledFuture;
 public class WebsocketController {
     private static final Logger LOG = LoggerFactory.getLogger(WebsocketController.class);
 
-    private List<Article> archivalTenArticles = new ArrayList<>();
     private Map<String, ScheduledFuture<?>> tasks = new ConcurrentHashMap();
+    private Date archiveArticleDate;
 
     @Autowired
     private TaskScheduler taskScheduler;
@@ -36,10 +37,15 @@ public class WebsocketController {
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-        if (archivalTenArticles.isEmpty()) {
-            archivalTenArticles = newsService.getLastTenArticles();
+        Date lastArticleDate = newsService.getLastArticleDate();
+        if (archiveArticleDate == null) {
+            archiveArticleDate = lastArticleDate;
+        } else if (lastArticleDate.after(archiveArticleDate)) {
+            List<Article> lastArticles = newsService.getArticlesOlderThen(archiveArticleDate);
+            messagingTemplate.convertAndSend("/topic/greetings", lastArticles);
+            archiveArticleDate = lastArticles.get(lastArticles.size() - 1).getPublishedAt();
         }
-        ScheduledFuture<?> scheduledFuture = taskScheduler.scheduleAtFixedRate(sendNewArticles(), 10_000);//start
+        ScheduledFuture<?> scheduledFuture = taskScheduler.scheduleAtFixedRate(sendNewArticles(), 60_000);//start polling
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
         tasks.put(sessionId, scheduledFuture);
@@ -58,12 +64,11 @@ public class WebsocketController {
 
     private Runnable sendNewArticles() {
         return () -> {
-            List<Article> lastTenArticles = newsService.getLastTenArticles();
-            ArrayList<Article> newArticles = new ArrayList<>(lastTenArticles);
-            newArticles.removeAll(archivalTenArticles);
-            if (!newArticles.isEmpty()) {
-                messagingTemplate.convertAndSend("/topic/greetings", newArticles);
-                this.archivalTenArticles = lastTenArticles;
+            List<Article> lastArticles = newsService.getArticlesOlderThen(archiveArticleDate);
+            if (!lastArticles.isEmpty()) {
+                lastArticles.sort(Comparator.comparing(Article::getPublishedAt));
+                messagingTemplate.convertAndSend("/topic/greetings", lastArticles);
+                archiveArticleDate = lastArticles.get(lastArticles.size() - 1).getPublishedAt();
             }
         };
     }
