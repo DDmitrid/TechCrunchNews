@@ -35,7 +35,7 @@
             <p id="description" th:text="${article.description}"/>
             <div>
                 <span class="pull-left">Author:   <span id="author" th:text="${article.author}"/></span>
-                <span class="pull-right">PublishedAt:   <span id="publishedAt" th:text="${#dates.formatISO(article.publishedAt)}"/></span>
+                <span class="pull-right">PublishedAt:   <span id="publishedAt" th:text="${#temporals.formatISO(article.publishedAt)}"/></span>
             </div>
         </div>
     </div>

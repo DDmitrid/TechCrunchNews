@@ -1,10 +1,9 @@
 package com.introlabsystems.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.introlabsystems.constants.TechCrunchNewsConstants;
 import com.introlabsystems.domain.Article;
+import com.introlabsystems.domain.TechCruncnResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -25,110 +24,73 @@ public class NewsServiceImpl implements NewsService {
 
     @Autowired
     private TechCrunchNewsConstants techCrunchNewsConstants;
+    @Autowired
+    ObjectMapper mapper;
 
     @Override
     public List<Article> getLastPageArticles() {
-        List<Article> articles = new ArrayList<>();
+        TechCruncnResponse techCruncnResponse = null;
         String url = getLastArticlesUrl.replace("{apiKey}", techCrunchNewsConstants.getApiKey());
         RestTemplate restTemplate = new RestTemplate();
         String jsonResponse = restTemplate.getForObject(url, String.class);
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            JsonNode root = mapper.readTree(jsonResponse);
-            String statusNode = root.path("status").asText();
-            if ("error".equals(statusNode)) {
-                LOG.error("NewsApi response status is error.");
-                return Collections.emptyList();
-            }
-            ArrayNode articlesNode = (ArrayNode) root.path("articles");
-            for (JsonNode node : articlesNode) {
-                articles.add(mapper.readValue(node.toString(), Article.class));
-            }
+            techCruncnResponse = mapper.readValue(jsonResponse, TechCruncnResponse.class);
         } catch (IOException e) {
             e.printStackTrace();
-            LOG.error("NewsApi response parse error.");
+            LOG.error("NewsApi response parse exception.");
         }
-        return articles;
+        return techCruncnResponse.getArticles();
     }
 
     @Override
     public List<Article> getLastTenArticles() {
-        List<Article> articles = new ArrayList<>();
+        TechCruncnResponse techCruncnResponse = null;
         String url = getLastArticlesUrl.replace("{apiKey}", techCrunchNewsConstants.getApiKey());
         RestTemplate restTemplate = new RestTemplate();
         String jsonResponse = restTemplate.getForObject(url, String.class);
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            JsonNode root = mapper.readTree(jsonResponse);
-            String statusNode = root.path("status").asText();
-            if ("error".equals(statusNode)) {
-                LOG.error("NewsApi response status is error.");
-                return Collections.emptyList();
-            }
-            ArrayNode articlesNode = (ArrayNode) root.path("articles");
-            for (int i = 0; i < articlesNode.size() && i < 10; i++) {
-                articles.add(mapper.readValue(articlesNode.get(i).toString(), Article.class));
-            }
+            techCruncnResponse = mapper.readValue(jsonResponse, TechCruncnResponse.class);
         } catch (IOException e) {
             e.printStackTrace();
-            LOG.error("NewsApi response parse error.");
+            LOG.error("NewsApi response parse exception.");
         }
-        return articles;
+        return techCruncnResponse.getArticles().subList(0, 10);
     }
 
     @Override
-    public List<Article> getArticlesOlderThen(Date lastArticleDate) {
-        List<Article> articles = new ArrayList<>();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(lastArticleDate);
-        calendar.add(Calendar.MINUTE, 1);
-        Date lastArticleDatePlusMinute = calendar.getTime();
-
+    public List<Article> getArticlesOlderThen(LocalDateTime lastArticleDate) {
+        TechCruncnResponse techCruncnResponse = null;
+        String lastArticleDatePlusMinute = lastArticleDate.plusMinutes(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String url = getArticlesOldesThenUrl
                 .replace("{apiKey}", techCrunchNewsConstants.getApiKey())
-                .replace("{dateFrom}", dateFormat.format(lastArticleDatePlusMinute));
+                .replace("{dateFrom}", lastArticleDatePlusMinute);
         RestTemplate restTemplate = new RestTemplate();
         String jsonResponse = restTemplate.getForObject(url, String.class);
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            JsonNode root = mapper.readTree(jsonResponse);
-            String statusNode = root.path("status").asText();
-            if ("error".equals(statusNode)) {
-                LOG.error("NewsApi response status is error.");
-                return Collections.emptyList();
-            }
-            ArrayNode articlesNode = (ArrayNode) root.path("articles");
-            for (int i = 0; i < articlesNode.size(); i++) {
-                articles.add(mapper.readValue(articlesNode.get(i).toString(), Article.class));
-            }
+            techCruncnResponse = mapper.readValue(jsonResponse, TechCruncnResponse.class);
         } catch (IOException e) {
             e.printStackTrace();
-            LOG.error("NewsApi response parse error.");
+            LOG.error("NewsApi response parse exception.");
         }
-        return articles;
+        return techCruncnResponse.getArticles();
     }
 
     @Override
-    public Date getLastArticleDate() {
-        Article lastArticle = null;
+    public LocalDateTime getLastArticleDate() {
+        TechCruncnResponse techCruncnResponse = null;
         String url = getLastArticlesUrl.replace("{apiKey}", techCrunchNewsConstants.getApiKey());
         RestTemplate restTemplate = new RestTemplate();
         String jsonResponse = restTemplate.getForObject(url, String.class);
 
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            JsonNode root = mapper.readTree(jsonResponse);
-            ArrayNode articlesNode = (ArrayNode) root.path("articles");
-            lastArticle = mapper.readValue(articlesNode.get(0).toString(), Article.class);
+            techCruncnResponse = mapper.readValue(jsonResponse, TechCruncnResponse.class);
         } catch (IOException e) {
             e.printStackTrace();
-            LOG.error("NewsApi response parse error.");
+            LOG.error("NewsApi response parse exception.");
         }
-        return lastArticle.getPublishedAt();
+        return techCruncnResponse.getArticles().get(0).getPublishedAt();
     }
 }

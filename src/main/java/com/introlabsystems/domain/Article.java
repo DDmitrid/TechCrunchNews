@@ -2,7 +2,7 @@ package com.introlabsystems.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Article {
 
@@ -14,7 +14,7 @@ public class Article {
     private String urlToImage;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Date publishedAt;
+    private LocalDateTime publishedAt;
 
     public Article() {
     }
@@ -67,11 +67,11 @@ public class Article {
         this.urlToImage = urlToImage;
     }
 
-    public Date getPublishedAt() {
+    public LocalDateTime getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(Date publishedAt) {
+    public void setPublishedAt(LocalDateTime publishedAt) {
         this.publishedAt = publishedAt;
     }
 

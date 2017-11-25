@@ -14,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +26,7 @@ public class WebsocketController {
     private static final Logger LOG = LoggerFactory.getLogger(WebsocketController.class);
 
     private Map<String, ScheduledFuture<?>> tasks = new ConcurrentHashMap();
-    private Date archiveArticleDate;
+    private LocalDateTime archiveArticleDate;
 
     @Autowired
     private TaskScheduler taskScheduler;
@@ -37,10 +37,10 @@ public class WebsocketController {
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-        Date lastArticleDate = newsService.getLastArticleDate();
+        LocalDateTime lastArticleDate = newsService.getLastArticleDate();
         if (archiveArticleDate == null) {
             archiveArticleDate = lastArticleDate;
-        } else if (lastArticleDate.after(archiveArticleDate)) {
+        } else if (lastArticleDate.isAfter(archiveArticleDate)) {
             List<Article> lastArticles = newsService.getArticlesOlderThen(archiveArticleDate);
             messagingTemplate.convertAndSend("/topic/greetings", lastArticles);
             archiveArticleDate = lastArticles.get(lastArticles.size() - 1).getPublishedAt();
