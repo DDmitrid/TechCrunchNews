@@ -16,6 +16,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
             integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
             crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.2/moment-with-locales.js"></script>
 
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -35,7 +36,7 @@
             <p id="description" th:text="${article.description}"/>
             <div>
                 <span class="pull-left">Author:   <span id="author" th:text="${article.author}"/></span>
-                <span class="pull-right">PublishedAt:   <span id="publishedAt" th:text="${#temporals.formatISO(article.publishedAt)}"/></span>
+                <span class="pull-right">PublishedAt:   <span id="publishedAt" th:text="${#temporals.format(article.publishedAt, 'MMMM dd, yyyy HH:mm:ss', #locale.ENGLISH)}"/></span>
             </div>
         </div>
     </div>

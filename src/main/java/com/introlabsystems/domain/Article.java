@@ -12,8 +12,6 @@ public class Article {
     private String description;
     private String url;
     private String urlToImage;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime publishedAt;
 
     public Article() {

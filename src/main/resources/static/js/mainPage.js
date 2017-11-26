@@ -19,7 +19,7 @@ function addNewArticles(articlesArr) {
             .append("<img class='img-responsive center-block article_image' src='" + item.urlToImage + "'/>")
             .append("<p id='description'>" + item.description + "</p>")
             .append("<span class='pull-left'>Author:   <span id='publishedAt'>" + item.author + "</span></span>"
-                + "<span class='pull-right'>PublishedAt:   <span id='publishedAt'>" + item.publishedAt + "</span></span>");
+                + "<span class='pull-right'>PublishedAt:   <span id='publishedAt'>" + moment.utc(item.publishedAt).format('MMMM D, YYYY HH:mm:ss') + "</span></span>");
 
         // $('#articles_container').append(newArticle);
         $('#articles_container').prepend(newArticle);
@@ -33,8 +33,10 @@ function sendLastAtricle() {
     var description = $("#article").first().find('#description').text();
     var author = $("#article").first().find('#author').text();
     var publishedAt = $("#article").first().find('#publishedAt').text();
-    console.log(new Date(publishedAt));
-    console.log(Date.parse(publishedAt));
+    // console.log(new Date(publishedAt));
+    // console.log(Date.parse(publishedAt));
+    // console.log(moment(publishedAt));
+    // console.log(moment.utc(publishedAt));
 
     var article = {
         "url": url,
@@ -42,7 +44,7 @@ function sendLastAtricle() {
         "urlToImage": urlToImage,
         "description": description,
         "author": author,
-        "publishedAt": Date.parse(publishedAt)
+        "publishedAt": moment.utc(publishedAt)
     };
     console.log(JSON.stringify(article, undefined, 2));
 
